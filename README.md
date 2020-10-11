@@ -14,6 +14,7 @@ The codes takes the images of cifar10 as the input.
 The images are organized as follows:
 
 ./train/class_id/name_of_image
+
 ./test/class_id/name_of_image
 
 # Usage
