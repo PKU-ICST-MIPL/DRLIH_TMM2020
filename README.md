@@ -18,7 +18,7 @@ The images are organized as follows:
 
 # Usage
 
-Start training and tesing by executiving the following commands. This will train and test the model on XMediaNet datatset. 
+Start training and tesing by executiving the following commands. This will train and test the model on Cifar10 datatset. 
 
 python train.py 0 32 16 cifar
 
