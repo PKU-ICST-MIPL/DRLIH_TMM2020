@@ -53,9 +53,6 @@ class ActorCritic(torch.nn.Module):
 	def forward(self, inputs):
 		
 		fc6 = self.model(inputs)
-#		x = self.fet(x)
-#		batch_size = 16
-#		cx = Variable(torch.zeros(batch_size, 4096).cuda())
 		hx = fc6
 		probs = []
 		for step in range(self.bit_len):
@@ -69,12 +66,12 @@ class ActorCritic(torch.nn.Module):
 		self.opt1.zero_grad()
 		self.opt2.zero_grad()
 		self.opt3.zero_grad()
-#		self.opt4.zero_grad()
+
 	def step(self):
 		self.opt1.step()
 		self.opt2.step()
 		self.opt3.step()
-#		self.opt4.step()
+
 
 	def low_lr(self,rate):
 		for pg in self.opt1.param_groups:
@@ -86,42 +83,3 @@ class ActorCritic(torch.nn.Module):
 		for pg in self.opt3.param_groups:
 			pg['lr'] = pg['lr'] * rate
 					
-#		for pg in opt4.param_groups:
-#			pg['lr'] = pg['lr'] * rate
-
-
-
-
-
-
-
-
-'''
-class Q_network(torch.nn.Module)
-
-	def __init__(self):
-		super(Q_network, self).__init__()
-		
-		self.l1 = nn.Linear(256*3,256*3)
-		
-		self.l2 = nn.Linear(256*3,1)
-		
-        self.l1.weight.data = normalized_columns_initializer(
-           self.l1.weight.data, 0.01)
-        self.l1.bias.data.fill_(0)
-		
-        self.l2.weight.data = normalized_columns_initializer(
-            self.l2.weight.data, 0.01)
-        self.l2.bias.data.fill_(0)
-		
-		self.train()
-	
-	def forward(self,inputs):
-		
-		x = self.l1(inputs)
-		
-		x = self.l2(x)
-		
-		return x
-		
-'''	
