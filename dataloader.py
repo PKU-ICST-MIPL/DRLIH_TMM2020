@@ -160,6 +160,11 @@ class Dataloader(object):
 			if self.classidx==self.classed:
 				self.classidx=0
 		return pic,label		
-		
+
+	def get_valid(self,classidx,batch_size,bias):
+		pic=torch.zeros(batch_size,3,224,224)
+		for ix in range(bias,bias+batch_size):
+			pic[ix-bias]=self.get_image3(classidx,ix)
+		return pic
 		
 			
