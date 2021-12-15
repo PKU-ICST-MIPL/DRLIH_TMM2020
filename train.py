@@ -16,8 +16,11 @@ import function
 
 scrp,gpu,bit,batch,dataset = argv
 
+
+
 steps = 10000
 rate = 0.1
+lamda = 0.001
 observe = True
 
 ##setting
@@ -33,8 +36,8 @@ bit_len = int(bit)
 flag = True
 
 if dataset=='cifar':
-	Dtest=Dataloader("/home/yezhaoda/TMM-DRLIH/cifar10/resize64-rf-noncrop/test",0,5500,0,10)
-	traintest=Dataloader("/home/yezhaoda/TMM-DRLIH/cifar10/resize64-rf-noncrop/train",0,500,0,10)
+	Dtest=Dataloader("/home/yezhaoda/TMM-Hash/resize64-rf-noncrop/test",0,5500,0,10)
+	traintest=Dataloader("/home/yezhaoda/TMM-Hash/resize64-rf-noncrop/train",0,500,0,10)
 	flag = False
 
 if dataset=='nus':
@@ -57,18 +60,16 @@ print('model over')
 
 ###train
 
-episode_length = 0
+episode_length = 1
 while True:
-	episode_length += 1
-	
 	
 	if episode_length%steps==0:
 		model.low_lr(rate)
 	
-	if episode_length%1000==0:
+	if (episode_length%1000==0) and (episode_length>20000):
 		if dataset=='cifar':
 			model.eval()
-#			map = test_util.test(Dtest,model,batch_size,bit_len)
+			map = test_util.test(Dtest,model,batch_size,bit_len)
 			file=open(logpath,"a")
 			file.write('#### map='+str(map)+'\n')
 			file.close()
@@ -111,13 +112,13 @@ while True:
 	tri_loss = function.triplet_margin_loss(hash_o,hash_p,hash_n)
 	
 	tmp_prob = (function.log_porb(hash_o))/(bit_len)
-	loss_L = torch.mean(tmp_prob * tri_loss)
+	loss_L = torch.mean(tmp_prob * tri_loss.detach())
 	
 	loss_R = torch.mean(tri_loss)
 	
-	final_loss = 0.05*loss_L + 0.95*loss_R
+	final_loss = lamda * loss_L + loss_R * (1-lamda)
 
-#### 更新参数
+#### update
 
 	model.zero_grad()
 	
@@ -125,7 +126,7 @@ while True:
 		
 	model.step()
 	
-	
+	episode_length += 1
 	if episode_length%20==0:
 		print(str(episode_length)+' '+str(final_loss.item())+" "+str(loss_L.item())+" "+str(loss_R.item())+"\n")
 		file=open(logpath,"a")
