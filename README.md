@@ -11,6 +11,12 @@ This code is implemented with pytorch.
 
 The codes takes the images of cifar10 as the input.
 
+The data and the pre-trained model which can be download from the links:
+
+https://pan.baidu.com/s/1BWKRWJPQ5r-rP3H9MRXe6g 
+
+password: 94a2
+
 The images are organized as follows:
 
 ./train/class_id/name_of_image
