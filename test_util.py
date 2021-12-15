@@ -10,14 +10,8 @@ from torch.autograd import Variable
 from dataloader import Dataloader
 
 
-
-def cmp(a,b):
-	if a[0]==b[0]:
-		return 0
-	if a[0]>b[0]:
-		return 1
-	if a[0]<b[0]:
-		return -1
+def get_ele(elem):
+    return elem[0]    
 	
 def calc(a,b):
 	for ix in range(len(a)):
@@ -44,15 +38,13 @@ def get_map(query,data,query_lab,data_lab):
 		eletot = 0.0
 		cnt = 0
 		for j in range(len(data)):
-			list .append(  (calc(query[i],data[j]),data_lab[j])  )
-		list.sort(cmp)
+			list.append(  (calc(query[i],data[j]),data_lab[j])  )
+		list.sort(key=get_ele)
 		for j in range(len(list)):
 			if list[j][1]==query_lab[i]:
 				cnt += 1
 				eletot += cnt*1.0/(1.0+j)
 		eletot /= cnt
-#		print list
-#		print eletot
 		tot += eletot
 	tot /= len(query)
 	return tot
